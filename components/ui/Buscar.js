@@ -35,7 +35,7 @@ const Buscar = () => {
 				position: relative;
 			`}
 		>
-			<InputText type='text' placeholder='Buscar Productos' />
+			<InputText type='text' placeholder='Buscar' />
 
 			<InputSubmit type='submit'>Buscar</InputSubmit>
 		</form>

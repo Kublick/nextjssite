@@ -20,9 +20,15 @@ const Nav = styled.nav`
 const Navegacion = () => {
 	return (
 		<Nav>
-			<Link href='/'>Inicio</Link>
-			<Link href='/populares'>Populares</Link>
-			<Link href='/nuevo-producto'>Nuevo Producto</Link>
+			<Link href='/'>
+				<a>Inicio </a>
+			</Link>
+			<Link href='/populares'>
+				<a>Populares</a>
+			</Link>
+			<Link href='/nuevo-producto'>
+				<a>Nuevo Producto </a>
+			</Link>
 		</Nav>
 	);
 };

@@ -44,7 +44,9 @@ const Header = () => {
 					`}
 				>
 					<Link href='/'>
-						<Logo>P</Logo>
+						<Logo>
+							<a>P</a>
+						</Logo>
 					</Link>
 
 					<Buscar />
