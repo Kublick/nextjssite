@@ -31,7 +31,7 @@ const Producto = () => {
 	const [error, guardarError] = useState(false);
 
 	//context firebase
-	const { firebase } = useContext(FirebaseContext);
+	const { firebase, usuario } = useContext(FirebaseContext);
 
 	const {
 		query: { id },
@@ -51,7 +51,7 @@ const Producto = () => {
 
 			obtenerProducto();
 		}
-	}, [id]);
+	}, [id, producto]);
 
 	if (error) return <Error404 />;
 
@@ -67,7 +67,35 @@ const Producto = () => {
 		url,
 		urlimagen,
 		creador,
+		haVotado,
 	} = producto;
+
+	console.log(creador);
+
+	const votarProducto = () => {
+		console.log("wegotclick");
+		if (!usuario) {
+			return router.push("/login");
+		}
+
+		let nuevoTotal = votos + 1;
+
+		if (haVotado.includes(usuario.uid)) return;
+
+		//Guardar ID usuario
+
+		const nuevoHaVotado = [...haVotado, usuario.uid];
+
+		firebase.db
+			.collection("productos")
+			.doc(id)
+			.update({ votos: nuevoTotal, haVotado: nuevoHaVotado });
+
+		guardarProducto({
+			...producto,
+			votos: nuevoTotal,
+		});
+	};
 
 	return (
 		<Layout>
@@ -89,19 +117,21 @@ const Producto = () => {
 							<p>
 								Publicado hace:
 								{formatDistanceToNow(new Date(), { locale: es })}
-								<p>
-									Por: {creador.nombre} de {empresa}{" "}
-								</p>
+								<p>{/* Por: {creador.nombre} de {empresa}{" "} */}</p>
 								<img src={urlimagen} />
 								<p>{descripcion}</p>
 							</p>
-							<h2>Agrega tu comentario</h2>
-							<form>
-								<Campo>
-									<input type='text' name='mensaje' />
-								</Campo>
-								<InputSubmit type='submit' value='Agregar Comentario' />
-							</form>
+							{usuario && (
+								<>
+									<h2>Agrega tu comentario</h2>
+									<form>
+										<Campo>
+											<input type='text' name='mensaje' />
+										</Campo>
+										<InputSubmit type='submit' value='Agregar Comentario' />
+									</form>
+								</>
+							)}
 							<h2
 								css={css`
 									margin: 2rem 0;
@@ -109,11 +139,11 @@ const Producto = () => {
 							>
 								Comentarios
 							</h2>
-							{comentarios.map((comentario) => (
+							{/* {comentarios.map((comentario) => (
 								<li>
 									<p>Escrito por: {comentario.usuarioNombre}</p>
 								</li>
-							))}
+							))} */}
 						</div>
 						<aside>
 							<Boton target='_blank' bgColor='true' href={url}>
@@ -132,7 +162,7 @@ const Producto = () => {
 								>
 									{votos} Votos
 								</p>
-								<Boton>Votar</Boton>
+								{usuario && <Boton onClick={votarProducto}>Votar</Boton>}
 							</div>
 						</aside>
 					</ContenedorProducto>
